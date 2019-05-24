@@ -1,0 +1,65 @@
+---
+# Application to deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mytodos
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mytodos
+  template:
+    metadata:
+      labels:
+        app: mytodos
+        tier: frontend
+    spec:
+      containers:
+      - name: mytodos
+        image: de.icr.io/mace/mytodos:1.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 250m     # 250 millicores = 1/4 core
+            memory: 128Mi # 128 MB
+          limits:
+            cpu: 500m
+            memory: 384Mi
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mytodos-ingress
+  annotations:
+    # Force the use of https if the request is http
+    ingress.bluemix.net/redirect-to-https: "True"
+spec:
+  tls:
+  - hosts:
+    - dnb-cluster.eu-de.containers.appdomain.cloud
+    secretName: dnb-cluster
+  rules:
+  - host: dnb-cluster.eu-de.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: mytodos
+          servicePort: 8080
+---
+# Service to expose frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: mytodos
+  labels:
+    app: mytodos
+    tier: frontend
+spec:
+  ports:
+  - protocol: TCP
+    port: 8080
+  selector:
+    app: mytodos
+    tier: frontend
