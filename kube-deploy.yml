@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: mytodos
-        image: de.icr.io/mace/mytodos:1.0
+        image: de.icr.io/mace/minitodo:1.0
         imagePullPolicy: Always
         resources:
           requests:
