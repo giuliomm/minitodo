@@ -37,10 +37,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - dnb-cluster.osl01.containers.appdomain.cloud
-    secretName: dnb-cluster
+    - micluster.eu-de.containers.appdomain.cloud
+    secretName: minicluster
   rules:
-  - host: dnb-cluster.osl01.containers.appdomain.cloud
+  - host: minicluster.eu-de.containers.appdomain.cloud
     http:
       paths:
       - path: /
